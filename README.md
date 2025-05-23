@@ -1,16 +1,34 @@
-# NestJSFlow
+# NestJS Flow
 
-   Description:
-     Flow của endpoint: (login)
-        + Trước khi request vào server thì sẽ thực hiện middleware (ở đây là log ra http status code và url)
-        + Sau khi thực hiện middleware sẽ vào lớp Guard (ở đâu là roleGuard , nó sẽ verify quyền truy cập)
-        + Nếu qua Guard thành công sẽ vào interceptor để can thiệp vào request gửi lên (ở đây log ra thời gian thực hiện request)
-        + Sau đó sẽ thực hiện pipe (ở đây dùng ValidationPipe của nestJS để validate dữ liệu gửi lên, sử dụng kết hợp với class-validator)
-        + Qua bước pipe sẽ có 2 hướng:
-           - Nếu thành công sẽ đi vào App module (controller, service, ) sẽ thực hiện các logic để login
-           - Nếu ko thành công sẽ đi vào Epxeption filter để bắt các lỗi catch ( ở đây log ra các lỗi catch nếu có bất kì lỗi nào liên quan đến exeption)
+## 📋 Mô tả luồng xử lý
+
+Luồng xử lý của endpoint `login` trong NestJS được mô tả như sau:
+
+1. **🔧 Middleware**
+   - Thực hiện trước khi request vào hệ thống.
+   - Tác vụ: Log HTTP status code và URL của request.
+
+2. **🛡️ Guard**
+   - Kiểm tra quyền truy cập của người dùng.
+   - Ở đây sử dụng `RoleGuard` để xác minh vai trò (role) người dùng.
+
+3. **⏱️ Interceptor**
+   - Can thiệp vào request trước khi đến controller.
+   - Mục đích: Log lại thời gian thực hiện request.
+
+4. **📦 Pipe (Validation)**
+   - Xử lý và kiểm tra dữ liệu gửi lên từ client.
+   - Dùng `ValidationPipe` của NestJS kết hợp với `class-validator` để validate dữ liệu.
+
+5. **⚙️ Xử lý logic trong App Module**
+   - Nếu dữ liệu hợp lệ, request sẽ được xử lý trong Controller, Service để thực hiện logic `login`.
+
+6. **❗ Exception Filter**
+   - Nếu có lỗi xảy ra ở bất kỳ bước nào phía trên, Exception Filter sẽ bắt và log lỗi chi tiết.
+
         => Sơ đồ flow: 
             Client(request) --> Middleware --> Guard --> Interceptor --> Pipe --> AppModule -->  Client
                                                                                     |
                                                                                     |
-                                                                                Exception filter   
+                                                                                Exception filter
+----
